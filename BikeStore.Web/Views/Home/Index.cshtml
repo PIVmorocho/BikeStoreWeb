@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="text-center mb-4">
+    <h1 class="display-5">BikeStore</h1>
+    <p class="lead">Sistema de administracion e inventario de bicicletas</p>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Punto de Venta</h5>
+                <p class="card-text">Registra una nueva venta seleccionando cliente y bicicletas.</p>
+                <a asp-controller="Ventas" asp-action="PuntoDeVenta" class="btn btn-primary">Ir al POS</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Inventario</h5>
+                <p class="card-text">Consulta el stock de bicicletas y revisa las alertas de stock bajo.</p>
+                <a asp-controller="Bicicletas" asp-action="Inventario" class="btn btn-outline-primary">Ver Inventario</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Historial de Ventas</h5>
+                <p class="card-text">Revisa el historial general de ventas o por cliente.</p>
+                <a asp-controller="Ventas" asp-action="Index" class="btn btn-outline-primary">Ver Ventas</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Bicicletas</h5>
+                <p class="card-text">Administra el catalogo de bicicletas: precio, stock y estado.</p>
+                <a asp-controller="Bicicletas" asp-action="Index" class="btn btn-outline-secondary">Administrar</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Categorias</h5>
+                <p class="card-text">Administra las categorias del catalogo de bicicletas.</p>
+                <a asp-controller="Categorias" asp-action="Index" class="btn btn-outline-secondary">Administrar</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h5 class="card-title">Clientes</h5>
+                <p class="card-text">Administra los clientes registrados en BikeStore.</p>
+                <a asp-controller="Clientes" asp-action="Index" class="btn btn-outline-secondary">Administrar</a>
+            </div>
+        </div>
+    </div>
+</div>
