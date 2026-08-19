@@ -1,0 +1,84 @@
+@using BikeStore.Web.Services
+@model List<BikeStore.Web.Models.Api.BicicletaDto>
+@{
+    ViewData["Title"] = "Inventario";
+    var filtro = (BicicletaFiltro)ViewBag.Filtro;
+    var totalAgotadas = Model.Count(b => b.Agotado);
+    var totalStockBajo = Model.Count(b => b.StockBajo);
+}
+
+<h1>Panel de Inventario</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+    <div class="col">
+        <div class="card text-bg-light">
+            <div class="card-body">
+                <h6 class="card-subtitle text-muted">Total de bicicletas</h6>
+                <p class="display-6 mb-0">@Model.Count</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-bg-warning">
+            <div class="card-body">
+                <h6 class="card-subtitle">Stock bajo</h6>
+                <p class="display-6 mb-0">@totalStockBajo</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card text-bg-danger">
+            <div class="card-body text-white">
+                <h6 class="card-subtitle">Agotadas</h6>
+                <p class="display-6 mb-0">@totalAgotadas</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="get" class="mb-3">
+    <div class="btn-group" role="group">
+        <a asp-action="Inventario" class="btn @(filtro.StockBajo != true && filtro.Agotado != true ? "btn-secondary" : "btn-outline-secondary")">Todas</a>
+        <a asp-action="Inventario" asp-route-stockBajo="true" class="btn @(filtro.StockBajo == true ? "btn-warning" : "btn-outline-warning")">Stock bajo</a>
+        <a asp-action="Inventario" asp-route-agotado="true" class="btn @(filtro.Agotado == true ? "btn-danger" : "btn-outline-danger")">Agotadas</a>
+    </div>
+</form>
+
+<table class="table table-striped table-hover align-middle">
+    <thead>
+        <tr>
+            <th>Categoria</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Alerta</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bici in Model)
+        {
+            <tr class="@(bici.Agotado ? "table-danger" : bici.StockBajo ? "table-warning" : "")">
+                <td>@bici.NombreCategoria</td>
+                <td>@bici.Marca</td>
+                <td>@bici.Modelo</td>
+                <td>@bici.Precio.ToString("C")</td>
+                <td>@bici.Stock</td>
+                <td>
+                    @if (bici.Agotado)
+                    {
+                        <span class="badge bg-danger">Agotado</span>
+                    }
+                    else if (bici.StockBajo)
+                    {
+                        <span class="badge bg-warning text-dark">Stock bajo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">OK</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
