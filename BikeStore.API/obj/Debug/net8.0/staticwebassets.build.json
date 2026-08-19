@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "8HUHZMYH41yxRDUQmR2U0uCMECf+wq0Or19xld2oTEQ=",
+  "Source": "BikeStore.API",
+  "BasePath": "_content/BikeStore.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

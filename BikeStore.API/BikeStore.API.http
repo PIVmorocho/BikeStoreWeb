@@ -1,0 +1,33 @@
+@BikeStore.API_HostAddress = http://localhost:5218
+
+GET {{BikeStore.API_HostAddress}}/api/categorias
+Accept: application/json
+
+###
+
+GET {{BikeStore.API_HostAddress}}/api/clientes
+Accept: application/json
+
+###
+
+GET {{BikeStore.API_HostAddress}}/api/bicicletas?stockBajo=true
+Accept: application/json
+
+###
+
+GET {{BikeStore.API_HostAddress}}/api/ventas
+Accept: application/json
+
+###
+
+POST {{BikeStore.API_HostAddress}}/api/ventas
+Content-Type: application/json
+
+{
+  "idCliente": 1,
+  "detalles": [
+    { "idBicicleta": 2, "cantidad": 1 }
+  ]
+}
+
+###
