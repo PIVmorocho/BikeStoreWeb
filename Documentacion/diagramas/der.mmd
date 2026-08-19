@@ -1,0 +1,47 @@
+erDiagram
+    CATEGORIA ||--o{ BICICLETA : "clasifica"
+    CLIENTE ||--o{ VENTA : "realiza"
+    VENTA ||--o{ DETALLEVENTA : "contiene"
+    BICICLETA ||--o{ DETALLEVENTA : "se incluye en"
+
+    CATEGORIA {
+        int IdCategoria PK
+        nvarchar Nombre
+        nvarchar Descripcion
+        bit Activo
+    }
+
+    BICICLETA {
+        int IdBicicleta PK
+        int IdCategoria FK
+        nvarchar Marca
+        nvarchar Modelo
+        decimal Precio
+        int Stock
+        nvarchar Estado
+    }
+
+    CLIENTE {
+        int IdCliente PK
+        varchar Cedula
+        nvarchar Nombres
+        nvarchar Apellidos
+        varchar Telefono
+        varchar Correo
+    }
+
+    VENTA {
+        int IdVenta PK
+        datetime Fecha
+        int IdCliente FK
+        decimal Total
+    }
+
+    DETALLEVENTA {
+        int IdDetalle PK
+        int IdVenta FK
+        int IdBicicleta FK
+        int Cantidad
+        decimal Precio
+        decimal Subtotal
+    }

@@ -1,0 +1,21 @@
+flowchart LR
+    Usuario(["Usuario del Sistema"])
+
+    subgraph Sistema["Sistema BikeStore"]
+        direction TB
+        UC1(["Administrar Bicicletas"])
+        UC2(["Administrar Categorias"])
+        UC3(["Administrar Clientes"])
+        UC4(["Registrar Ventas"])
+        UC5(["Consultar Ventas"])
+        UC6(["Consultar Inventario"])
+    end
+
+    Usuario --- UC1
+    Usuario --- UC2
+    Usuario --- UC3
+    Usuario --- UC4
+    Usuario --- UC5
+    Usuario --- UC6
+
+    UC4 -. incluye .-> UC6

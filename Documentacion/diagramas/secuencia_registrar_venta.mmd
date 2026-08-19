@@ -1,0 +1,52 @@
+sequenceDiagram
+    actor Vend as Vendedor
+    participant POS as Vista Punto de Venta (JS)
+    participant WebCtrl as VentasController (Web)
+    participant WebSvc as VentaApiService (Web)
+    participant ApiCtrl as VentasController (API)
+    participant ApiSvc as VentaService (API)
+    participant Uow as UnitOfWork / Repositorio
+    participant DB as SQL Server
+
+    Vend->>POS: Selecciona cliente y agrega bicicletas al carrito
+    POS->>WebCtrl: POST /Ventas/Registrar (VentaCreateDto)
+    WebCtrl->>WebSvc: CrearAsync(dto)
+    WebSvc->>ApiCtrl: POST /api/ventas
+    ApiCtrl->>ApiSvc: CrearVentaAsync(dto)
+    ApiSvc->>Uow: Clientes.GetByIdAsync(IdCliente)
+    Uow->>DB: SELECT Cliente
+    DB-->>Uow: Cliente encontrado
+    ApiSvc->>Uow: BeginTransactionAsync()
+
+    loop Por cada detalle del carrito
+        ApiSvc->>Uow: Bicicletas.GetByIdAsync(IdBicicleta)
+        Uow->>DB: SELECT Bicicleta
+        DB-->>Uow: Bicicleta (precio, stock)
+        ApiSvc->>ApiSvc: Valida Stock >= Cantidad
+        ApiSvc->>ApiSvc: Calcula Subtotal = Precio x Cantidad
+        ApiSvc->>ApiSvc: Descuenta Stock -= Cantidad
+    end
+
+    ApiSvc->>ApiSvc: Calcula IVA = Subtotal x PorcentajeIva
+    ApiSvc->>ApiSvc: Calcula Total = Subtotal + IVA
+    ApiSvc->>Uow: Ventas.AddAsync(venta con detalles)
+    ApiSvc->>Uow: CommitTransactionAsync()
+    Uow->>DB: INSERT Venta, DetalleVenta, UPDATE Bicicleta
+    DB-->>Uow: Confirmacion (COMMIT)
+    Uow-->>ApiSvc: Venta persistida
+
+    alt Stock insuficiente o error de negocio
+        ApiSvc->>Uow: RollbackTransactionAsync()
+        Uow->>DB: ROLLBACK
+        ApiSvc-->>ApiCtrl: BusinessRuleException
+        ApiCtrl-->>WebSvc: 400 Bad Request
+        WebSvc-->>WebCtrl: ApiException
+        WebCtrl-->>POS: JSON {success:false, error}
+        POS-->>Vend: Muestra mensaje de error
+    else Venta registrada
+        ApiSvc-->>ApiCtrl: VentaResponseDto
+        ApiCtrl-->>WebSvc: 201 Created + VentaResponseDto
+        WebSvc-->>WebCtrl: VentaResponseDto
+        WebCtrl-->>POS: JSON {success:true, idVenta}
+        POS-->>Vend: Redirige al detalle de la venta
+    end

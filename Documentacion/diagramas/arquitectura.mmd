@@ -1,0 +1,31 @@
+flowchart LR
+    Usuario(["Usuario del<br/>navegador"])
+
+    subgraph WEB["BikeStore.Web (ASP.NET Core MVC)"]
+        direction TB
+        WebControllers["Controladores MVC<br/>Categorias, Bicicletas,<br/>Clientes, Ventas, Home"]
+        WebViews["Vistas Razor<br/>Bootstrap 5"]
+        WebServices["Servicios tipados<br/>HttpClientFactory"]
+        WebControllers --> WebViews
+        WebControllers --> WebServices
+    end
+
+    subgraph API["BikeStore.API (ASP.NET Core Web API)"]
+        direction TB
+        ApiMiddleware["Middleware global<br/>de excepciones"]
+        ApiControllers["Controladores REST<br/>Categorias, Bicicletas,<br/>Clientes, Ventas"]
+        ApiServices["Capa de Servicios<br/>logica de negocio"]
+        ApiUow["Unit of Work +<br/>Repositorios"]
+        ApiContext["BikeStoreDbContext<br/>(EF Core)"]
+
+        ApiMiddleware --> ApiControllers
+        ApiControllers --> ApiServices
+        ApiServices --> ApiUow
+        ApiUow --> ApiContext
+    end
+
+    DB[("SQL Server<br/>BikeStore")]
+
+    Usuario -- HTTPS --> WebControllers
+    WebServices -- "HTTP / JSON REST" --> ApiControllers
+    ApiContext -- "TDS / SQL" --> DB

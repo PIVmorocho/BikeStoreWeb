@@ -1,0 +1,30 @@
+sequenceDiagram
+    actor Admin as Administrador
+    participant Vista as Vista Razor (Create)
+    participant WebCtrl as BicicletasController (Web)
+    participant WebSvc as BicicletaApiService (Web)
+    participant ApiCtrl as BicicletasController (API)
+    participant ApiSvc as BicicletaService (API)
+    participant Uow as UnitOfWork / Repositorio
+    participant DB as SQL Server
+
+    Admin->>Vista: Completa formulario (categoria, marca, modelo, precio, stock, estado)
+    Vista->>WebCtrl: POST Create(BicicletaCreateDto)
+    WebCtrl->>WebCtrl: Valida ModelState (DataAnnotations)
+    WebCtrl->>WebSvc: CreateAsync(dto)
+    WebSvc->>ApiCtrl: POST /api/bicicletas
+    ApiCtrl->>ApiCtrl: Valida ModelState
+    ApiCtrl->>ApiSvc: CreateAsync(dto)
+    ApiSvc->>Uow: Categorias.GetByIdAsync(IdCategoria)
+    Uow->>DB: SELECT Categoria
+    DB-->>Uow: Categoria encontrada
+    ApiSvc->>Uow: Bicicletas.AddAsync(bicicleta)
+    ApiSvc->>Uow: SaveChangesAsync()
+    Uow->>DB: INSERT INTO Bicicleta
+    DB-->>Uow: IdBicicleta generado
+    Uow-->>ApiSvc: Bicicleta creada
+    ApiSvc-->>ApiCtrl: BicicletaDto
+    ApiCtrl-->>WebSvc: 201 Created + BicicletaDto
+    WebSvc-->>WebCtrl: BicicletaDto
+    WebCtrl-->>Vista: Redirect a Index
+    Vista-->>Admin: Muestra listado con mensaje de exito

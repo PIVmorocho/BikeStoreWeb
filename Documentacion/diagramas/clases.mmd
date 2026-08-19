@@ -1,0 +1,55 @@
+classDiagram
+    class Categoria {
+        +int IdCategoria
+        +string Nombre
+        +string Descripcion
+        +bool Activo
+        +ICollection~Bicicleta~ Bicicletas
+    }
+
+    class Bicicleta {
+        +int IdBicicleta
+        +int IdCategoria
+        +string Marca
+        +string Modelo
+        +decimal Precio
+        +int Stock
+        +string Estado
+        +Categoria Categoria
+        +ICollection~DetalleVenta~ DetallesVenta
+    }
+
+    class Cliente {
+        +int IdCliente
+        +string Cedula
+        +string Nombres
+        +string Apellidos
+        +string Telefono
+        +string Correo
+        +ICollection~Venta~ Ventas
+    }
+
+    class Venta {
+        +int IdVenta
+        +DateTime Fecha
+        +int IdCliente
+        +decimal Total
+        +Cliente Cliente
+        +ICollection~DetalleVenta~ Detalles
+    }
+
+    class DetalleVenta {
+        +int IdDetalle
+        +int IdVenta
+        +int IdBicicleta
+        +int Cantidad
+        +decimal Precio
+        +decimal Subtotal
+        +Venta Venta
+        +Bicicleta Bicicleta
+    }
+
+    Categoria "1" --> "0..*" Bicicleta : clasifica
+    Cliente "1" --> "0..*" Venta : realiza
+    Venta "1" --> "1..*" DetalleVenta : contiene
+    Bicicleta "1" --> "0..*" DetalleVenta : incluida en
